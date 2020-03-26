@@ -16,30 +16,50 @@ func main() {
 	modifier := flag.Int("modifier", 0, "What is your modifier?")
 	flag.Parse()
 
-	sum := 0
-
+	slice := make([]int, 0, *amountOfDice)
 	rand.Seed(time.Now().UnixNano())
 
 	if *atAdvantage == true {
-		fmt.Println("Yo")
+
+		for i := 1; i <= *amountOfDice; i++ {
+			num := 1 + rand.Intn(*diceToRoll)
+			slice = append(slice, num)
+		}
+		max := slice[0]
+
+		for i := 1; i < *amountOfDice; i++ {
+
+			if max < slice[i] {
+
+				max = slice[i]
+			}
+		}
+		fmt.Println(*modifier + max)
 	}
 
 	if *atDisadvantage == true {
-		fmt.Println("Yo")
+		for i := 1; i <= *amountOfDice; i++ {
+			num := 1 + rand.Intn(*diceToRoll)
+			slice = append(slice, num)
+		}
+		min := slice[0]
+
+		for i := 1; i < *amountOfDice; i++ {
+
+			if min > slice[i] {
+
+				min = slice[i]
+			}
+		}
+		fmt.Println(*modifier + min)
 	}
 
 	if *atAdvantage == false && *atDisadvantage == false {
+		sum := 0
 		for i := 1; i <= *amountOfDice; i++ {
 			num := 1 + rand.Intn(*diceToRoll)
 			sum += num
 		}
 		fmt.Println(*modifier + sum)
 	}
-}
-
-func max(x, y int) int {
-	if x < y {
-		return y
-	}
-	return x
 }
