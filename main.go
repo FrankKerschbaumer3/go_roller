@@ -7,21 +7,6 @@ import (
 	"time"
 )
 
-// MinMax creates a min and max value.
-func MinMax(a []int) (int, int) {
-	min := a[0]
-	max := a[0]
-	for _, value := range a {
-		if max < value {
-			max = value
-		}
-		if min > value {
-			min = value
-		}
-	}
-	return min, max
-}
-
 //Function to roll dice
 func main() {
 
@@ -31,9 +16,11 @@ func main() {
 	atAdvantage := flag.Bool("advantage", false, "Roll with Advantage?")
 	atDisadvantage := flag.Bool("disadvantage", false, "Roll with Disadvantage?")
 	modifier := flag.Int("modifier", 0, "What is your modifier?")
+
 	flag.Parse()
 
-	slice := make([]int, 0, *amountOfDice)
+	slice := make([]int, 0)
+
 	rand.Seed(time.Now().UnixNano())
 
 	if *atAdvantage == true {
@@ -41,9 +28,12 @@ func main() {
 			num := 1 + rand.Intn(*diceToRoll)
 			slice = append(slice, num)
 		}
-		_, max := MinMax(slice)
+		// Pass ints to max function
+		max := Max(slice)
 
-		fmt.Println(*modifier + max)
+		sum := *modifier + max
+
+		fmt.Println(sum)
 	}
 
 	if *atDisadvantage == true {
@@ -51,9 +41,12 @@ func main() {
 			num := 1 + rand.Intn(*diceToRoll)
 			slice = append(slice, num)
 		}
+		// Pass ints to min function
+		min := Min(slice)
 
-		min, _ := MinMax(slice)
-		fmt.Println(*modifier + min)
+		sum := *modifier + min
+
+		fmt.Println(sum)
 	}
 
 	if *atAdvantage == false && *atDisadvantage == false {
@@ -64,4 +57,25 @@ func main() {
 		}
 		fmt.Println(*modifier + sum)
 	}
+}
+
+// Min creates a min value.
+func Min(a []int) int {
+	min := a[0]
+	for _, value := range a {
+		if value <= min {
+			min = value
+		}
+	}
+	return min
+}
+
+// Max creates a max value
+func Max(a []int) (max int) {
+	for _, value := range a {
+		if value >= max {
+			max = value
+		}
+	}
+	return
 }
