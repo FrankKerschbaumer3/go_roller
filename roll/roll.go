@@ -12,6 +12,7 @@ func Roll(diceToRoll, amountOfDice, modifier int, atAdvantage, atDisadvantage bo
 	slice := make([]int, 0)
 
 	if atAdvantage == true {
+		amountOfDice = 2
 		for i := 1; i <= amountOfDice; i++ {
 			num := 1 + rand.Intn(diceToRoll)
 			slice = append(slice, num)
@@ -20,6 +21,7 @@ func Roll(diceToRoll, amountOfDice, modifier int, atAdvantage, atDisadvantage bo
 		max := minmax.Max(slice)
 		return modifier + max
 	} else if atDisadvantage == true {
+		amountOfDice = 2
 		for i := 1; i <= amountOfDice; i++ {
 			num := 1 + rand.Intn(diceToRoll)
 			slice = append(slice, num)
