@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"math/rand"
 	"time"
+
+	"github.com/FrankKerschbaumer3/go_roller/roll"
 )
 
-//Function to roll dice
+//Function that will accept ints and booleans to output a dice total.
 func main() {
 
 	//Flags to parse dice conditions
@@ -19,42 +21,9 @@ func main() {
 
 	flag.Parse()
 
-	slice := make([]int, 0)
-
 	rand.Seed(time.Now().UnixNano())
 
-	if *atAdvantage == true {
-		for i := 1; i <= *amountOfDice; i++ {
-			num := 1 + rand.Intn(*diceToRoll)
-			slice = append(slice, num)
-		}
-		// Pass ints to max function
-		max := Max(slice)
+	sum := roll.Roll(*diceToRoll, *amountOfDice, *modifier, *atAdvantage, *atDisadvantage)
 
-		sum := *modifier + max
-
-		fmt.Println(sum)
-	}
-
-	if *atDisadvantage == true {
-		for i := 1; i <= *amountOfDice; i++ {
-			num := 1 + rand.Intn(*diceToRoll)
-			slice = append(slice, num)
-		}
-		// Pass ints to min function
-		min := Min(slice)
-
-		sum := *modifier + min
-
-		fmt.Println(sum)
-	}
-
-	if *atAdvantage == false && *atDisadvantage == false {
-		sum := 0
-		for i := 1; i <= *amountOfDice; i++ {
-			num := 1 + rand.Intn(*diceToRoll)
-			sum += num
-		}
-		fmt.Println(*modifier + sum)
-	}
+	fmt.Println(sum)
 }

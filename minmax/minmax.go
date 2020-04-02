@@ -1,4 +1,4 @@
-package main
+package minmax
 
 // Min creates a min value.
 func Min(a []int) int {
