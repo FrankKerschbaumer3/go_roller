@@ -31,7 +31,7 @@ func TestMin(t *testing.T) {
 		t.Run("Min", func(t *testing.T) {
 			result := Min(rolls.in)
 			if result != rolls.expected {
-				t.Error("Something went wrong :(")
+				t.Error("Min fuction did not return expected value")
 			}
 		})
 	}
@@ -42,7 +42,7 @@ func TestMax(t *testing.T) {
 		t.Run("Max", func(t *testing.T) {
 			result := Max(rolls.in)
 			if result != rolls.expected {
-				t.Error("Something went wrong :(")
+				t.Error("Max fuction did not return expected value")
 			}
 		})
 	}

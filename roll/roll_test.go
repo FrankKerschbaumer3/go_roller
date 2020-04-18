@@ -45,7 +45,7 @@ func TestRoll1(t *testing.T) {
 		t.Run("Roll", func(t *testing.T) {
 			result := Roll(roll.dice, roll.amount, roll.modifier, roll.advantage, roll.disadvantage)
 			if result != roll.expected {
-				t.Error("Something went wrong :(")
+				t.Error("Dice roll did not return expected value based on the hardcoded seed")
 			}
 		})
 	}
@@ -57,7 +57,7 @@ func TestRoll2(t *testing.T) {
 		t.Run("Roll", func(t *testing.T) {
 			result := Roll(roll.dice, roll.amount, roll.modifier, roll.advantage, roll.disadvantage)
 			if result != roll.expected {
-				t.Error("Something went wrong :(")
+				t.Error("Dice roll did not return expected value based on the hardcoded seed")
 			}
 		})
 	}
