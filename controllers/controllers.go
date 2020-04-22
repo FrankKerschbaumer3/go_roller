@@ -9,16 +9,18 @@ import (
 
 // Input json structure
 type Input struct {
-	Dice int `json:"dice" binding:"required"`
-	Num  int `json:"num" binding:"required"`
-	Mod  int `json:"mod" binding:"required"`
+	Name string `json:"name" binding:"required"`
+	Dice int    `json:"dice" binding:"required"`
+	Num  int    `json:"num"`
+	Mod  int    `json:"mod"`
 }
 
 // Output Json Structure
 type Output struct {
-	Rolled []int `json:"dice" binding:"required"`
-	Mod    int   `json:"mod" binding:"required"`
-	Total  int   `json:"total" binding:"required"`
+	Name   string `json:"name" binding:"required"`
+	Rolled []int  `json:"dice" binding:"required"`
+	Mod    int    `json:"mod" binding:"required"`
+	Total  int    `json:"total" binding:"required"`
 }
 
 //NormalRoll passes the json to the roll function
@@ -31,6 +33,7 @@ func NormalRoll(c *gin.Context) {
 	}
 
 	input = Input{
+		Name: input.Name,
 		Dice: input.Dice,
 		Num:  input.Num,
 		Mod:  input.Mod}
@@ -38,6 +41,7 @@ func NormalRoll(c *gin.Context) {
 	rolled := roll.Roll(input.Dice, input.Num, input.Mod, false, false)
 
 	output := Output{
+		Name:   input.Name,
 		Rolled: rolled.Rolled,
 		Mod:    input.Mod,
 		Total:  rolled.Sum,
@@ -56,6 +60,7 @@ func AdvantageRoll(c *gin.Context) {
 	}
 
 	input = Input{
+		Name: input.Name,
 		Dice: input.Dice,
 		Num:  input.Num,
 		Mod:  input.Mod}
@@ -63,6 +68,7 @@ func AdvantageRoll(c *gin.Context) {
 	rolled := roll.Roll(input.Dice, input.Num, input.Mod, true, false)
 
 	output := Output{
+		Name:   input.Name,
 		Rolled: rolled.Rolled,
 		Mod:    input.Mod,
 		Total:  rolled.Sum,
@@ -81,6 +87,7 @@ func DisadvantageRoll(c *gin.Context) {
 	}
 
 	input = Input{
+		Name: input.Name,
 		Dice: input.Dice,
 		Num:  input.Num,
 		Mod:  input.Mod}
@@ -88,6 +95,7 @@ func DisadvantageRoll(c *gin.Context) {
 	rolled := roll.Roll(input.Dice, input.Num, input.Mod, false, true)
 
 	output := Output{
+		Name:   input.Name,
 		Rolled: rolled.Rolled,
 		Mod:    input.Mod,
 		Total:  rolled.Sum,
