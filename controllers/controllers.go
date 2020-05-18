@@ -7,102 +7,109 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Request json structure
+type Request struct {
+	Roll []Input `json:"roll" binding:"required"`
+}
+
 // Input json structure
 type Input struct {
-	Name string `json:"name" binding:"required"`
-	Dice int    `json:"dice" binding:"required"`
-	Num  int    `json:"num"`
-	Mod  int    `json:"mod"`
+	Sides    int `json:"sides" binding:"required"`
+	Amount   int `json:"amount" binding:"required"`
+	Modifier int `json:"modifier"`
 }
 
 // Output Json Structure
 type Output struct {
-	Name   string `json:"name" binding:"required"`
-	Rolled []int  `json:"dice" binding:"required"`
-	Mod    int    `json:"mod" binding:"required"`
-	Total  int    `json:"total" binding:"required"`
+	Sides  int   `json:"sides" binding:"required"`
+	Rolled []int `json:"rolled" binding:"required"`
+	Total  int   `json:"total"`
 }
 
 //NormalRoll passes the json to the roll function
 func NormalRoll(c *gin.Context) {
 
-	var input Input
-	if err := c.ShouldBindJSON(&input); err != nil {
+	var request Request
+
+	if err := c.ShouldBindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	input = Input{
-		Name: input.Name,
-		Dice: input.Dice,
-		Num:  input.Num,
-		Mod:  input.Mod}
+	rollInputs := make([]roll.Input, 0)
 
-	rolled := roll.Roll(input.Dice, input.Num, input.Mod, false, false)
-
-	output := Output{
-		Name:   input.Name,
-		Rolled: rolled.Rolled,
-		Mod:    input.Mod,
-		Total:  rolled.Sum,
+	for _, in := range request.Roll {
+		input := roll.Input(in)
+		rollInputs = append(rollInputs, input)
 	}
 
-	c.JSON(http.StatusOK, output)
+	rolling := roll.All(rollInputs)
+
+	rollOutputs := make([]Output, 0)
+
+	for _, out := range rolling {
+		output := Output{
+			Sides:  out.Sides,
+			Rolled: out.Rolled,
+			Total:  out.Total,
+		}
+		rollOutputs = append(rollOutputs, output)
+	}
+
+	c.JSON(http.StatusOK, rollOutputs)
 }
 
-//AdvantageRoll passes the json to the roll function
-func AdvantageRoll(c *gin.Context) {
+// AdvantageRoll passes the json to the roll function
+// func AdvantageRoll(c *gin.Context) {
 
-	var input Input
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+// 	var input Input
+// 	if err := c.ShouldBindJSON(&input); err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+// 		return
+// 	}
 
-	input = Input{
-		Name: input.Name,
-		Dice: input.Dice,
-		Num:  input.Num,
-		Mod:  input.Mod}
+// 	input = Input{
+// 		Sides:    input.Sides,
+// 		Amount:   input.Amount,
+// 		Modifier: input.Modifier,
+// 	}
 
-	rolled := roll.Roll(input.Dice, input.Num, input.Mod, true, false)
+// 	advantageOutput := roll.Roll(roll.Input{}, true, false)
 
-	output := Output{
-		Name:   input.Name,
-		Rolled: rolled.Rolled,
-		Mod:    input.Mod,
-		Total:  rolled.Sum,
-	}
+// 	output := Output{
+// 		Sides:  advantageOutput.Sides,
+// 		Rolled: advantageOutput.Rolled,
+// 		Total:  advantageOutput.Total,
+// 	}
 
-	c.JSON(http.StatusOK, output)
-}
+// 	c.JSON(http.StatusOK, output)
+// }
 
-//DisadvantageRoll passes the json to the roll function
-func DisadvantageRoll(c *gin.Context) {
+// // DisadvantageRoll passes the json to the roll function
+// func DisadvantageRoll(c *gin.Context) {
 
-	var input Input
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+// 	var input Input
+// 	if err := c.ShouldBindJSON(&input); err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+// 		return
+// 	}
 
-	input = Input{
-		Name: input.Name,
-		Dice: input.Dice,
-		Num:  input.Num,
-		Mod:  input.Mod}
+// 	input = Input{
+// 		Sides:    input.Sides,
+// 		Amount:   input.Amount,
+// 		Modifier: input.Modifier,
+// 	}
 
-	rolled := roll.Roll(input.Dice, input.Num, input.Mod, false, true)
+// 	disadvantageOutput := roll.Roll(roll.Input{}, false, true)
 
-	output := Output{
-		Name:   input.Name,
-		Rolled: rolled.Rolled,
-		Mod:    input.Mod,
-		Total:  rolled.Sum,
-	}
+// 	rollOutput := Output{
+// 		Sides:  disadvantageOutput.Sides,
+// 		Rolled: disadvantageOutput.Rolled,
+// 		Total:  disadvantageOutput.Total,
+// 	}
 
-	c.JSON(http.StatusOK, output)
-}
+// 	c.JSON(http.StatusOK, rollOutput)
+// }
 
 // Pong responds from ping
 func Pong(c *gin.Context) {
