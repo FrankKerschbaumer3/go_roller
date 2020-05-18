@@ -23,7 +23,7 @@ func main() {
 	r := gin.Default()
 	r.GET("/ping", controllers.Pong)
 	r.POST("/roll", controllers.NormalRoll)
-	r.POST("/roll/advantage", controllers.AdvantageRoll)
-	r.POST("/roll/disadvantage", controllers.DisadvantageRoll)
+	// r.POST("/roll/advantage", controllers.AdvantageRoll)
+	// r.POST("/roll/disadvantage", controllers.DisadvantageRoll)
 	r.Run(":8080")
 }
