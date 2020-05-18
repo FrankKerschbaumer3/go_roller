@@ -74,14 +74,14 @@ func Roll(input Input, atAdvantage, atDisadvantage bool) *Result {
 // All lkjshdalfj
 func All(inputs []Input) []*Result {
 
-	slice := make([]*Result, 0)
+	allRolls := make([]*Result, 0)
 
 	for _, input := range inputs {
 		rolls := Roll(input, false, false)
-		slice = append(slice, rolls)
+		allRolls = append(allRolls, rolls)
 		fmt.Println(rolls)
 	}
-	return slice
+	return allRolls
 }
 
 // call roll multiple times with the various dice to roll
