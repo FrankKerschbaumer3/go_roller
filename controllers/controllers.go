@@ -21,9 +21,10 @@ type Input struct {
 
 // Output Json Structure
 type Output struct {
-	Sides  int   `json:"sides" binding:"required"`
-	Rolled []int `json:"rolled" binding:"required"`
-	Total  int   `json:"total"`
+	Sides    int   `json:"sides" binding:"required"`
+	Rolled   []int `json:"rolled" binding:"required"`
+	Modifier int   `json:"modifier"`
+	Total    int   `json:"total"`
 }
 
 //NormalRoll passes the json to the roll function
@@ -49,9 +50,10 @@ func NormalRoll(c *gin.Context) {
 
 	for _, out := range rolling {
 		output := Output{
-			Sides:  out.Sides,
-			Rolled: out.Rolled,
-			Total:  out.Total,
+			Sides:    out.Sides,
+			Rolled:   out.Rolled,
+			Modifier: out.Modifier,
+			Total:    out.Total,
 		}
 		rollOutputs = append(rollOutputs, output)
 	}
@@ -59,57 +61,64 @@ func NormalRoll(c *gin.Context) {
 	c.JSON(http.StatusOK, rollOutputs)
 }
 
+// Modifier structure for advnatage and disadvantage rolls
+type Modifier struct {
+	Modifier int `json:"modifier"`
+}
+
 // AdvantageRoll passes the json to the roll function
-// func AdvantageRoll(c *gin.Context) {
+func AdvantageRoll(c *gin.Context) {
 
-// 	var input Input
-// 	if err := c.ShouldBindJSON(&input); err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-// 		return
-// 	}
+	var input Modifier
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
-// 	input = Input{
-// 		Sides:    input.Sides,
-// 		Amount:   input.Amount,
-// 		Modifier: input.Modifier,
-// 	}
+	rollInput := roll.Input{
+		Sides:    20,
+		Amount:   1,
+		Modifier: input.Modifier,
+	}
 
-// 	advantageOutput := roll.Roll(roll.Input{}, true, false)
+	advantageOutput := roll.Roll(rollInput, true, false)
 
-// 	output := Output{
-// 		Sides:  advantageOutput.Sides,
-// 		Rolled: advantageOutput.Rolled,
-// 		Total:  advantageOutput.Total,
-// 	}
+	output := Output{
+		Sides:    advantageOutput.Sides,
+		Rolled:   advantageOutput.Rolled,
+		Modifier: advantageOutput.Modifier,
+		Total:    advantageOutput.Total,
+	}
 
-// 	c.JSON(http.StatusOK, output)
-// }
+	c.JSON(http.StatusOK, output)
+}
 
-// // DisadvantageRoll passes the json to the roll function
-// func DisadvantageRoll(c *gin.Context) {
+// DisadvantageRoll passes the json to the roll function
+func DisadvantageRoll(c *gin.Context) {
 
-// 	var input Input
-// 	if err := c.ShouldBindJSON(&input); err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-// 		return
-// 	}
+	var input Modifier
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
-// 	input = Input{
-// 		Sides:    input.Sides,
-// 		Amount:   input.Amount,
-// 		Modifier: input.Modifier,
-// 	}
+	rollInput := roll.Input{
+		Sides:    20,
+		Amount:   1,
+		Modifier: input.Modifier,
+	}
 
-// 	disadvantageOutput := roll.Roll(roll.Input{}, false, true)
+	disadvantageOutput := roll.Roll(rollInput, true, false)
 
-// 	rollOutput := Output{
-// 		Sides:  disadvantageOutput.Sides,
-// 		Rolled: disadvantageOutput.Rolled,
-// 		Total:  disadvantageOutput.Total,
-// 	}
+	output := Output{
+		Sides:    disadvantageOutput.Sides,
+		Rolled:   disadvantageOutput.Rolled,
+		Modifier: disadvantageOutput.Modifier,
+		Total:    disadvantageOutput.Total,
+	}
 
-// 	c.JSON(http.StatusOK, rollOutput)
-// }
+	c.JSON(http.StatusOK, output)
+}
 
 // Pong responds from ping
 func Pong(c *gin.Context) {
