@@ -16,9 +16,10 @@ type Input struct {
 
 // Result struct for the return values
 type Result struct {
-	Sides  int
-	Rolled []int
-	Total  int
+	Sides    int
+	Rolled   []int
+	Modifier int
+	Total    int
 }
 
 // Roll will take in arguments and output what was rolled as the first returned output
@@ -37,9 +38,10 @@ func Roll(input Input, atAdvantage, atDisadvantage bool) *Result {
 
 		max := minmax.Max(slice)
 		return &Result{
-			Sides:  input.Amount,
-			Rolled: slice,
-			Total:  input.Modifier + max,
+			Sides:    input.Amount,
+			Rolled:   slice,
+			Modifier: input.Modifier,
+			Total:    input.Modifier + max,
 		}
 	} else if atDisadvantage == true {
 		input.Amount = 2
@@ -51,9 +53,10 @@ func Roll(input Input, atAdvantage, atDisadvantage bool) *Result {
 		// Pass ints to Min minmax.go function
 		min := minmax.Min(slice)
 		return &Result{
-			Sides:  input.Amount,
-			Rolled: slice,
-			Total:  input.Modifier + min,
+			Sides:    input.Amount,
+			Rolled:   slice,
+			Modifier: input.Modifier,
+			Total:    input.Modifier + min,
 		}
 	} else {
 		sum := 0
@@ -64,9 +67,10 @@ func Roll(input Input, atAdvantage, atDisadvantage bool) *Result {
 			sum += num
 		}
 		return &Result{
-			Sides:  input.Amount,
-			Rolled: slice,
-			Total:  input.Modifier + sum,
+			Sides:    input.Amount,
+			Rolled:   slice,
+			Modifier: input.Modifier,
+			Total:    input.Modifier + sum,
 		}
 	}
 }
